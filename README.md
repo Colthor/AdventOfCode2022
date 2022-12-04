@@ -6,5 +6,5 @@ Personal challenge: use as many different languages as possible. I decided that 
 
 + Day 1 - C++
 + Day 2 - Python 3
-+ Day 3 - Bash script
-+ Day 4 - BBC BASIC - bbcbasic.co.uk - party like it's 1989!
++ Day 3 - Bash script (New language for me)
++ Day 4 - BBC BASIC - bbcbasic.co.uk - party like it's 1989! (My first programming language :D)

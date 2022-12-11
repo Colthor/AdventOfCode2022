@@ -24,6 +24,8 @@ procedure Day9 is
    package PosSet is new Ada.Containers.Ordered_Sets (Element_Type => Pos);
    use PosSet;
 
+   type PosArray is array (Positive range <>) of Pos;
+
    procedure Move_Head (instruction : Character; H : in out Pos) is
    begin
       case instruction is
@@ -61,20 +63,26 @@ procedure Day9 is
    end Tail_Follow;
 
    procedure Follow_Instruction
-     (instruction :        Character; count : Integer; H, T : in out Pos;
-      TailPosns   : in out PosSet.Set)
+     (instruction :        Character; count : Integer; H : in out Pos;
+      T           : in out PosArray; TailPosns : in out PosSet.Set)
    is
+      tmp : Pos;
    begin
       for i in 1 .. count loop
          Put_Line
            (instruction'Image & ", H: " & "(" & H.x'Image & ", " & H.y'Image &
-            "), T:(" & T.x'Image & ", " & T.y'Image & ")");
+            "), T:(" & T (9).x'Image & ", " & T (9).y'Image & ")");
          Move_Head (instruction, H);
          Put_Line ("new H: " & "(" & H.x'Image & ", " & H.y'Image & ")");
-         Tail_Follow (H, T);
-         Put_Line ("new T:(" & T.x'Image & ", " & T.y'Image & ")");
-         if not TailPosns.Contains (T) then
-            TailPosns.Insert (T);
+         --tmp := T (1); -- This can't be necessary?
+         Tail_Follow (H, T (1));
+         --T (1) := tmp;
+         for n in 2 .. 9 loop
+            Tail_Follow (T (n - 1), T (n));
+         end loop;
+         Put_Line ("new T9:(" & T (9).x'Image & ", " & T (9).y'Image & ")");
+         if not TailPosns.Contains (T (9)) then
+            TailPosns.Insert (T (9));
          end if;
       end loop;
    end Follow_Instruction;
@@ -84,7 +92,7 @@ procedure Day9 is
    instruction : Character;
    count       : Integer;
    H           : Pos;
-   T           : Pos;
+   T           : PosArray (1 .. 9);
    TailPosns   : PosSet.Set;
 begin
    if Ada.Command_Line.Argument_Count < 1 then
@@ -95,7 +103,9 @@ begin
 
    H.x := 0;
    H.y := 0;
-   T   := H;
+   for n in 1 .. 9 loop
+      T (n) := H;
+   end loop;
 
    Open (file, In_File, Ada.Command_Line.Argument (1));
    while not End_Of_File (file) loop

@@ -11,3 +11,4 @@ Personal challenge: use as many different languages as possible. I decided that 
 + Day 5 - Free Pascal (new language!)
 + Day 6 - Prolog
 + Day 7 - VB.NET (2008 :s )
++ day 8 - Zig (new language, and harder than I anticipated.)

@@ -14,3 +14,4 @@ Personal challenge: use as many different languages as possible. I decided that 
 + Day 8 - Zig (new language, and harder than I anticipated.)
 + Day 9 - Ada - I used Alire, which was my only installation attempt that worked (new language, bad VS code support, unhelpful compiler. A more ornery Pascal.)
 + Day 10 - Haskell. Probably haven't used this since the first year of university.
++ Day 11 - TypeScript. Not quite new, I'd done "Hello World" before ;)

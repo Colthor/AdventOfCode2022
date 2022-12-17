@@ -16,3 +16,7 @@ Personal challenge: use as many different languages as possible. I decided that 
 + Day 10 - Haskell. Probably haven't used this since the first year of university.
 + Day 11 - TypeScript. Not quite new, I'd done "Hello World" before ;)
 + Day 12 - C. I haven't written good old-fashioned C in ages!
++ Day 13 - ?
++ Day 14 - ?
++ Day 15 - ?
++ Day 16 - C#. I like C#. This was an incredibly hard problem and my solution is very bad though. If the answer to part 2 weren't at the beginning of the problem space it'd still be looking for it...

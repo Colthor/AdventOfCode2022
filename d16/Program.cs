@@ -71,81 +71,6 @@ void calculateDistances(ref gt graph, ref HashSet<string> workingValves)
     }   
 }
 
-//correct, I think, but too slow.
-int recurseGraph(ref gt graph, int time, string location, HashSet<string> visited, HashSet<string> turnedValves, int turnableValves, int pressureReleased)
-{
-    if(0 == time || turnedValves.Count() == turnableValves)
-    {
-        return pressureReleased;
-    }
-
-    int nextTime = time - 1;
-    int maxPressureReleased = pressureReleased;
-
-    if(graph[location].flow > 0 && !turnedValves.Contains(location))
-    {
-        HashSet<string> valvesCopy = new HashSet<string>(turnedValves);
-        valvesCopy.Add(location);
-        int relPressure = nextTime * graph[location].flow;
-        int nextPressure = pressureReleased + relPressure;
-        //Console.WriteLine("At time " + time + ": open " + location + " releasing " + nextTime + " * " + graph[location].flow + " = " + relPressure + "; total=" + nextPressure);
-        int branchPressure = recurseGraph(ref graph, nextTime, location, new HashSet<string>(), valvesCopy, turnableValves, nextPressure);
-        if(branchPressure > maxPressureReleased) maxPressureReleased = branchPressure;
-    }
-
-    foreach (string nextLocation in graph[location].links)
-    {
-        if(!visited.Contains(nextLocation)) //don't go to places we've been since we last turned a valve.
-        {
-            HashSet<string> visitCopy = new HashSet<string>(visited);
-            visitCopy.Add(nextLocation);
-            int branchPressure = recurseGraph(ref graph, nextTime, nextLocation, visitCopy, turnedValves, turnableValves, pressureReleased);
-            if(branchPressure > maxPressureReleased) maxPressureReleased = branchPressure;
-        }
-    }
-
-    return maxPressureReleased;
-}
-
-//Fast but suboptimal :/
-int calcPressure(ref gt graph, ref HashSet<string> workingValves)
-{
-    HashSet<string> unvisited = new HashSet<string>(workingValves);
-    string loc = "AA";
-    int pressureReleased = 0;
-    int timeRemaining = 30;
-
-    while(timeRemaining > 0 && unvisited.Count() > 0)
-    {
-        Console.WriteLine("Visiting: " + loc + ", Time: " + timeRemaining + ", Pressure: " + pressureReleased);
-
-        int maxPressure = 0;
-        string next = "";
-        foreach(string dest in unvisited)
-        {
-            int timeReq = 1+graph[loc].distances[dest];
-            if(timeRemaining > timeReq)
-            {
-                int p = graph[dest].flow * (timeRemaining - timeReq);
-                Console.WriteLine(dest + ": " + p);
-                if(p > maxPressure)
-                {
-                    maxPressure = p;
-                    next = dest;
-                }
-            }
-        }
-        if(0 == maxPressure) break; //couldn't find a node in range.
-
-        pressureReleased += maxPressure;
-        timeRemaining -= 1+graph[loc].distances[next];
-        loc = next;
-        unvisited.Remove(loc);
-    }
-
-    return pressureReleased;
-}
-
 int recurseValves(ref gt graph, ref HashSet<string> unvisited, string location, int timeRemaining)
 {
     const int MAX_TRY = 11;
@@ -180,6 +105,37 @@ int recurseValves(ref gt graph, ref HashSet<string> unvisited, string location, 
     return maxPressure;
 }
 
+int SetCombos(ref gt graph, ref HashSet<string> from_in, ref HashSet<string> to_in, int depth)
+{
+    if (0 == depth) return 0;
+
+    HashSet<string> from = new HashSet<string>(from_in);
+    HashSet<string> to = new HashSet<string>(to_in);
+    int maxPressure = 0;
+
+    foreach(string loc in from_in)
+    {
+        if(depth > 3) Console.WriteLine(loc + "; max so far: " + maxPressure);
+        from.Remove(loc);
+        to.Add(loc);
+        int p = 0;
+        if(depth < 2)
+        {
+            p = recurseValves(ref graph, ref from, "AA", 26) +  recurseValves(ref graph, ref to, "AA", 26);
+        }
+
+        if (p > maxPressure) maxPressure = p;
+
+        p = SetCombos(ref graph, ref from, ref to, depth -1);
+        if (p > maxPressure) maxPressure = p;
+
+        to.Remove(loc);
+        from.Add(loc);
+    }
+
+    return maxPressure;
+}
+
 void doDay16(string filename)
 {
     gt graph = new gt();
@@ -188,7 +144,10 @@ void doDay16(string filename)
     calculateDistances(ref graph, ref workingValves);
     int maxPressureReleased = recurseValves(ref graph, ref workingValves, "AA", 30);//recurseGraph(ref graph, 30, "AA", new HashSet<string>(), new HashSet<string>(), turnableValves, 0);
     Console.WriteLine("Max pressure released: " + maxPressureReleased);
+
+    HashSet<String> tmp = new HashSet<string>();
     
+    Console.WriteLine("Part 2, with elephant's help: " + SetCombos(ref graph, ref workingValves, ref tmp, 5));
 }
 
 if( args.Length == 0)

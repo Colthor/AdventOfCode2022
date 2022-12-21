@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<head>
+    <script>
+	
+	function parseList(inStr)
+	{
+		var outStr = "";
+		var i = 0;
+		while(i < inStr.length)
+		{
+			
+		}
+		
+	}
+	
+	function parseInput(inStr)
+	{
+		var outStr = "";
+		// Yup, totally copied this from day 11's compiled typescript.
+		for (var _i = 0, _a = inStr.split(/[\r\n]+/); _i < _a.length; _i+=3)
+		{
+			var left = parseList(_a[_i]);
+			var right = parseList(_a[_i+1]);
+			outStr += "compareLists (" + left + ") (" + right + ")\n";
+		}
+		
+		return outStr;
+	}
+	
+	
+	
+	function doDay13()
+	{
+		var inputTxt = document.getElementById("inputTxt");
+        var outputTxt = document.getElementById("outputTxt");
+		outputTxt.value = parseInput(inputTxt.value);
+	}
+	</script>
+</head>
+<html>
+<body>
+<div><textarea id="inputTxt" style="width:500px; height:500px"></textarea></div>
+<div><button onclick="doDay13">Run part 1</button></div>
+<div><textarea id="outputTxt" style="width:500px; height:500px"></textarea></div>
+</body>
+</html>

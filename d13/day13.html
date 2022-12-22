@@ -6,7 +6,8 @@
 	{
 		var outStr = "";
 		var i = 0;
-		var numCount = 0;
+		//var numCount = 0;
+		var LastThingEndList = false;
 		while(i < inStr.length)
 		{
 			//console.log("parseList i=" + i + ", length=" + inStr.length + ", instr[i]=" + inStr[i]);
@@ -15,16 +16,18 @@
 				case ",": // Skip comma
 					break;
 				case "[": // Begin list				
-					outStr += "Lst ("
+					outStr += "(L ("
+					LastThingEndList = false;
 					break;				
 				case "]": // End list
-					for(let n = 0; n < numCount; ++n) outStr += ") "
-					outStr += "Nil) "
-					numCount = 0;
+					//if( !LastThingEndList) outStr += " Nil";
+					outStr += " Nil ) ):";
+					LastThingEndList = true;
 					break;
 				default: //Number
 				if('0' <= inStr[i] && inStr[i] <= '9')
 				{
+					LastThingEndList = false;
 					var comma = inStr.indexOf(",", i);
 					var bracket = inStr.indexOf("]", i);
 					var end = 0;
@@ -39,29 +42,28 @@
 					 
 					var numStr = inStr.substring(i, end);
 					i = end -1;
-					++numCount;
-					outStr += "(Cons (Num " + numStr + ") "
+					outStr += "(N " + numStr + "):"
 				}
 			}
 			++i;
 			
 		}
-		return outStr;		
+		return outStr + " Nil";		
 	}
 	
 	function parseInput(inStr)
 	{
-		var outStr = "";
+		var outStr = "logShow(sumPackets (";
 		// Yup, totally copied this from day 11's compiled typescript.
 		for (var _i = 0, _a = inStr.split(/[\r\n]+/); _i < _a.length; _i+=2) //Text areas cut out blank lines :rolleyes:
 		{
 			console.log("parseList _i=" + _i +", line 1/3: " + _a[_i]);
 			var left = parseList(_a[_i]);
 			var right = parseList(_a[_i+1]);
-			outStr += "compareLists (" + left + ") (" + right + ")\n\n";
+			outStr += "(I " + (_i/2 + 1) + " (" + left + ") (" + right + ") ) :";
 		}
 		
-		return outStr;
+		return outStr + " Nil ))";
 	}
 	
 	
@@ -98,8 +100,7 @@
 [[]]
 
 [1,[2,[3,[4,[5,6,7]]]],8,9]
-[1,[2,[3,[4,[5,6,0]]]],8,9]
-</textarea></div>
+[1,[2,[3,[4,[5,6,0]]]],8,9]</textarea></div>
 <div><button onclick="doDay13()">Run part 1</button></div>
 <div><textarea id="outputTxt" style="width:500px; height:500px"></textarea></div>
 </body>

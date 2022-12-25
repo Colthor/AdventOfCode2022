@@ -17,7 +17,7 @@ Personal challenge: use as many different languages as possible. I decided that 
 + Day 11 - TypeScript. Not quite new, I'd done "Hello World" before ;)
 + Day 12 - C. I haven't written good old-fashioned C in ages!
 + Day 13 - PureScript (new language? It's basically Haskell) with JS (in the .html file) to generate the code/data to put in main.purs.
-+ Day 14 - ?
++ Day 14 - Ruby (new language!)
 + Day 15 - ?
 + Day 16 - C#. I like C#. This was an incredibly hard problem and my solution is very bad though. If the answer to part 2 weren't at the beginning of the problem space it'd still be looking for it...
 + Day 17 - ?

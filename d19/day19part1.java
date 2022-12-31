@@ -127,9 +127,9 @@ class BlueprintSim {
     void simulate() {
         //System.out.println("Simulating Blueprint " + index);
         var choices = new ArrayList<Optional<MATERIALS>>();
-        for(int i = 1; i <= 32; ++i) {
+        for(int i = 1; i <= 24; ++i) {
             //System.out.println("Minute " + i);
-            var turnsLeft = 33 - i;
+            var turnsLeft = 25 - i;
             var maxGeodes = inventory.get(MATERIALS.GEODE) + turnsLeft * ( robots.get(MATERIALS.GEODE).quantity ) + (turnsLeft * (turnsLeft - 1))/2;
             if (maxGeodes < bestGeodes) break; // if we can't possibly beat our best, abandon the run.
 
@@ -155,10 +155,6 @@ class BlueprintSim {
         simulate();
         return index * bestGeodes;
     }
-    public int get_best() {
-        simulate();
-        return bestGeodes;
-    }
 }
 
 public class Main {
@@ -182,23 +178,20 @@ public class Main {
 
     public static void main(String[] args) {
         ArrayList<BlueprintSim> bpList = read_file("day19.txt");
-        int totalQL = 1, maxQL = 0;
+        int totalQL = 0, maxQL = 0;
         int no_imp = 0;
         boolean improved = false;
 
-        while(no_imp < 20) {
+        while(no_imp < 6) {
             System.out.println("Running, best yet: " + maxQL + " no_imp: " + no_imp);
-            for (int i = 0; i < 100000; i++) {
-                /* if (0 == i % 10000) {
+            for (int i = 0; i < 1000000; i++) {
+                if (0 == i % 100000) {
                     System.out.println(i + "; best yet: " + maxQL);
-                }*/
-                totalQL = 1;
-                int cap = 0;
+                }
+                totalQL = 0;
                 for (var bp : bpList) {
-                    if(cap > 2) break;
                     bp.reset_blueprint();
-                    totalQL *= bp.get_best();
-                    ++cap;
+                    totalQL += bp.get_quality_level();
                 }
                 if (totalQL > maxQL){
                     maxQL = totalQL;
@@ -206,10 +199,9 @@ public class Main {
                 }
             }
             if(!improved) no_imp += 1;
-            else no_imp = 0;
             improved = false;
         }
 
-        System.out.println("Best total geode product: " + maxQL);
+        System.out.println("Best total quality level: " + maxQL);
     }
 }

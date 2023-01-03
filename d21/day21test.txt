@@ -5,7 +5,7 @@ zczc: 2
 ptdq: humn - dvpt
 dvpt: 3
 lfqf: 4
-humn: 5
+humn: 301
 ljgn: 2
 sjmn: drzm * dbpl
 sllz: 4

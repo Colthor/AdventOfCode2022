@@ -1,4 +1,4 @@
-(ns day20
+(ns day20part2
   (:gen-class))
 (require '[clojure.string])
 
@@ -35,38 +35,40 @@
 
 
 (defn read-file [filename]
-  (map #(cons (Integer. %) [0])
-       (clojure.string/split-lines (slurp filename))))
+  (map-indexed #(cons (Integer. %2) [%1])
+               (clojure.string/split-lines (slurp filename))))
 
 (defn mix [input]
+  (println "mix!")
+  ;(println input)
   (let [length (- (count input) 1)]
-    (loop [xs input]
-      (let [item (first (first (filter #(= (second %) 0) xs)))
-            n (.indexOf xs [item 0])]
-        (if (== n -1)
-          (map first xs)
+    (loop [xs input
+           i  0]
+      (let [item (first (first (filter #(= (second %) i) xs)))
+            n (.indexOf xs [item i])]
+        (if (> i length)
+          xs
           (let [newpos (mod (+ n item) length)]
-            ;(println [item n newpos])
-            (recur (insert-at [item 1] newpos (drop-nth n xs)))))))))
+            ;(println [i item n newpos])
+            (recur (insert-at [item i] newpos (drop-nth n xs)) (+ i 1))))))))
 
-(defn part1debug []
-  (let [mixed (mix (read-file path))
-        length (count mixed)
-        zero   (.indexOf mixed 0)
-        p1     (mod (+ zero 1000) length) ; this should really be some kind of map over [1000 2000 3000] shouldn't it?
-        p2     (mod (+ zero 2000) length)
-        p3     (mod (+ zero 3000) length)
-        v1     (nth mixed p1)
-        v2     (nth mixed p2)
-        v3     (nth mixed p3)]
-    (println [v1 v2 v3 "=" (+ v1 v2 v3)])
-    (+ v1 v2 v3)))
 
 (defn part1 []
-  (let [mixed (mix (read-file path))
+  (let [mixed (map first (mix (read-file path)))
         length (count mixed)
         zero   (.indexOf mixed 0)]
-    (apply + (map #(nth mixed (mod (+ zero %) length)) [1000 2000 3000])))) ; tell me you understand this without the other version up there.
+    ;(println mixed)
+    (apply + (map #(nth  mixed (mod (+ zero %) length)) [1000 2000 3000])))) ; tell me you understand this without the other version up there.
+
+(def decryption-key 811589153)
+
+(defn part2 []
+  (let [input (map #(cons (* (first %) decryption-key) [(second %)]) (read-file path))
+        mixed (map first (nth (iterate mix input) 10))
+        length (count mixed)
+        zero   (.indexOf mixed 0)]
+    (apply + (map #(nth  mixed (mod (+ zero %) length)) [1000 2000 3000]))))
 
 (println "working!")
-(println (part1))
+;(println (part1))
+(println (part2))

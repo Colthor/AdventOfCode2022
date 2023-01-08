@@ -23,5 +23,5 @@ Personal challenge: use as many different languages as possible. I decided that 
 + Day 17 - Turing and a calculator for part 2, because OpenTuring doesn't support 64-bit ints :D (Another language from University - a less ornery Pascal.)
 + Day 18 - SQL (for SQL Server 2012-ish)
 + Day 19 - Java
-+ Day 20 - Clojure hopefully (WIP)
++ Day 20 - Clojure (new language, and probably the only one where the language was harder than the problem. Functional programming hurts my tiny brain.)
 + Day 21 - PHP (New language! Struggled with the algebra for p2 because the example was a special case that I happened to get right straight away.)

@@ -26,3 +26,4 @@ Personal challenge: use as many different languages as possible. I decided that 
 + Day 20 - Clojure (new language, and probably the only one where the language was harder than the problem. Functional programming hurts my tiny brain.)
 + Day 21 - PHP (New language! Struggled with the algebra for p2 because the example was a special case that I happened to get right straight away.)
 + Day 22 - Kotlin, paper, pen and scissors (new language, and quite a nice one at that. Mind that ranges are inclusive :) )
++ Day 23 - Go (Kinda new.. I'd never written it before, but had watched a "learn Go in three hours" series)

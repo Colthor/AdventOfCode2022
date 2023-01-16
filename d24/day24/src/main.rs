@@ -15,7 +15,7 @@ struct Blizzard {
 }
 
 impl Blizzard {
-    fn pos_after(&self, t: i32) -> (usize, usize) {
+    fn pos_after(&self, t: i32) -> Pos {
         (
             1 + ((self.x - 1) as i32 + t * self.dx).rem_euclid(self.map_width as i32 - 2) as usize,
             1 + ((self.y - 1) as i32 + t * self.dy).rem_euclid(self.map_height as i32 - 2) as usize,
@@ -31,6 +31,7 @@ struct Tile {
 }
 
 type MapLayer = Vec<Vec<Tile>>;
+type Pos = (usize, usize);
 
 fn new_map_layer(map_width: usize, map_height: usize) -> MapLayer {
     vec![
@@ -51,9 +52,10 @@ struct Map {
     map_width: usize,
     map_height: usize,
     blizzards: Vec<Blizzard>,
-    start_pos: (usize, usize),
-    end_pos: (usize, usize),
-    max_search_pos: (usize, usize),
+    start_pos: Pos,
+    end_pos: Pos,
+    max_search_pos: Pos,
+    min_search_pos: Pos,
 }
 
 impl Map {
@@ -142,6 +144,7 @@ impl Map {
             start_pos: start_pos,
             end_pos: end_pos,
             max_search_pos: start_pos,
+            min_search_pos: start_pos,
         }
     }
 
@@ -174,19 +177,21 @@ impl Map {
         self.map.push(layer);
     }
 
-    fn find_route(&mut self) -> usize {
+    fn find_route(&mut self, end_positions: &[Pos]) -> usize {
+        let end_pos = end_positions[0];
         let n = self.map.len() as usize;
-        println!("Iteration {n}");
+        //println!("Iteration {n}");
         self.create_next_layer();
         let mut new_max = self.max_search_pos;
+        let mut new_min = self.min_search_pos;
 
-        for x in 1..=self.max_search_pos.0 {
-            for y in 0..=self.max_search_pos.1 {
+        for x in self.min_search_pos.0..=self.max_search_pos.0 {
+            for y in self.min_search_pos.1..=self.max_search_pos.1 {
                 if self.map[n - 1][x][y].dist != UNREACHED {
                     let adj: Vec<(i32, i32)> = vec![(1, 0), (0, 0), (-1, 0), (0, -1), (0, 1)];
 
                     for d in adj {
-                        if !(0 == y && -1 == d.1) {
+                        if !(0 == y && -1 == d.1) && !(y + 1 == self.map_height && 1 == d.1) {
                             let vx = (x as i32 + d.0) as usize;
                             let vy = (y as i32 + d.1) as usize;
                             if !self.map[n][vx][vy].blocked {
@@ -194,6 +199,7 @@ impl Map {
                                 self.map[n][vx][vy].dist = n; //this really only needs to be a bool
                                 self.map[n][vx][vy].symbol = '*';
                                 new_max = (cmp::max(new_max.0, vx), cmp::max(new_max.1, vy));
+                                new_min = (cmp::min(new_min.0, vx), cmp::min(new_min.1, vy));
                             }
                         }
                     }
@@ -203,11 +209,26 @@ impl Map {
           //println!("max: {new_max:?}");
 
         self.max_search_pos = new_max;
+        self.min_search_pos = new_min;
 
-        if UNREACHED == self.map[n][self.end_pos.0][self.end_pos.1].dist {
-            self.find_route()
+        if UNREACHED == self.map[n][end_pos.0][end_pos.1].dist {
+            self.find_route(end_positions)
         } else {
-            self.map[n][self.end_pos.0][self.end_pos.1].dist
+            if end_positions.len() == 1 {
+                self.map[n][end_pos.0][end_pos.1].dist
+            } else {
+                println!("Reached {end_pos:?} after {n} iterations.");
+                //reset map reached and search for the next end position.
+                for x in 0..self.map_width {
+                    for y in 0..self.map_height {
+                        self.map[n][x][y].dist = UNREACHED;
+                    }
+                }
+                self.map[n][end_pos.0][end_pos.1].dist = n;
+                self.min_search_pos = end_pos;
+                self.max_search_pos = end_pos;
+                self.find_route(&end_positions[1..])
+            }
         }
     }
 
@@ -247,7 +268,12 @@ fn main() {
     println!("Hello, world!");
 
     let mut map = Map::new("day24.txt");
-    println!("Steps taken to reach exit: {}", map.find_route());
+    //let end_positions = vec![map.end_pos]; // part 1
+    let end_positions = vec![map.end_pos, map.start_pos, map.end_pos]; // part 2
+    println!(
+        "Steps taken to reach exit: {}",
+        map.find_route(&end_positions[..])
+    );
     map.output_map("out.txt");
     println!("Done.");
 }

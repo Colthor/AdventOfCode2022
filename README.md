@@ -27,3 +27,4 @@ Personal challenge: use as many different languages as possible. I decided that 
 + Day 21 - PHP (New language! Struggled with the algebra for p2 because the example was a special case that I happened to get right straight away.)
 + Day 22 - Kotlin, paper, pen and scissors (new language, and quite a nice one at that. Mind that ranges are inclusive :) )
 + Day 23 - Go (Kinda new.. I'd never written it before, but had watched a "learn Go in three hours" series)
++ Day 24 - Rust, one of my favourite languages.

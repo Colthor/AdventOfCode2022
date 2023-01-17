@@ -1,15 +1,21 @@
 program day25
     implicit none
     integer, parameter :: Int18 = selected_int_kind (18) !some of these SNAFUs are really big
-    character (len = 25) :: str, res
-    integer (kind=Int18):: o
+    character (len = 25) :: str
+    integer (kind=Int18):: sum
+    integer :: ios
     
-    str = '1=1-2210-21-=120102'
-    o = snafu_to_int(str)
-    res = int_to_snafu(o)
-    print *, 'snafu in: ', str
-    print *, 'to int:   ', o
-    print *, 'to snafu: ', res
+    open(unit=42, file='day25.txt', iostat=ios)
+    if ( ios /= 0 ) stop "Error opening file data.dat"
+
+    sum = 0
+    do
+        read(42, '(A)', iostat=ios) str
+        if (ios /= 0) exit
+        sum = sum + snafu_to_int(str)        
+    end do
+    
+    print *, "Sum: ", sum, " snafu: ", int_to_snafu(sum)
     
 contains
 

@@ -28,3 +28,7 @@ Personal challenge: use as many different languages as possible. I decided that 
 + Day 22 - Kotlin, paper, pen and scissors (new language, and quite a nice one at that. Mind that ranges are inclusive :) )
 + Day 23 - Go (Kinda new.. I'd never written it before, but had watched a "learn Go in three hours" series)
 + Day 24 - Rust, one of my favourite languages.
++ Day 25 - Fortran-90, which definitely has the coolest file extension (new language! Bet nobody's said that about Fortran for a while :D)
+
+And we're done! That was fun. 26 languages, 13 of which I'd not written more than "hello world" in, so I've learned a bunch and scrambled my brain quite effectively.
+Most languages had their niggles, but usually only made the process slower rather than harder. Exceptions being the functional ones, particularly Clojure, because it was so alien in syntax and underlying philosophy - even my little Haskell experience didn't help much. That said, I did do a bit of tailoring the language to the problem; no idea how I'd have done day 24 in Haskell or Prolog!

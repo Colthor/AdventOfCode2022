@@ -32,3 +32,5 @@ Personal challenge: use as many different languages as possible. I decided that 
 
 And we're done! That was fun. 26 languages, 13 of which I'd not written more than "hello world" in, so I've learned a bunch and scrambled my brain quite effectively.
 Most languages had their niggles, but usually only made the process slower rather than harder. Exceptions being the functional ones, particularly Clojure, because it was so alien in syntax and underlying philosophy - even my little Haskell experience didn't help much. That said, I did do a bit of tailoring the language to the problem; no idea how I'd have done day 24 in Haskell or Prolog!
+
+Notable omissions: COBOL and Perl, and any number of other functional languaguages. I think I'd like to give Odin a try at some point too.

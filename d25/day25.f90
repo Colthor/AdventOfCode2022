@@ -1,19 +1,52 @@
 program day25
     implicit none
-    character (len = 10) :: str
-    integer:: o
+    integer, parameter :: Int18 = selected_int_kind (18) !some of these SNAFUs are really big
+    character (len = 25) :: str, res
+    integer (kind=Int18):: o
     
-    str = '1=11-2'
+    str = '1=1-2210-21-=120102'
     o = snafu_to_int(str)
-    print *, 'Hello World! ', o
-    
+    res = int_to_snafu(o)
+    print *, 'snafu in: ', str
+    print *, 'to int:   ', o
+    print *, 'to snafu: ', res
     
 contains
+
+function int_to_snafu(n) result (s)
+    implicit none
+    integer (kind=Int18), intent(in) :: n
+    character(len = 25) :: s
+    character :: c
+    integer (kind=Int18) :: i, remain, d
+    
+    remain = n
+    i = 25
+    do while (remain > 0 .and. i > 0)
+        d = mod(remain, 5_Int18)
+        remain = remain / 5_Int18
+        c = ' '
+        
+        if(d < 3_Int18) then
+            c = char(ichar('0') + d)
+        else if (d == 3_Int18) then
+            c = '='
+            remain = remain + 1_Int18
+        else !d==4
+            c = '-'
+            remain = remain + 1_Int18        
+        endif
+        
+        s(i:i) = c
+        i = i - 1
+    end do
+    
+end function int_to_snafu
 
 function snafu_to_int(s) result (o)
     implicit none
     character (*), intent(in) :: s
-    integer:: o, n, p, i
+    integer (kind=Int18):: o, n, p, i
     
     o = 0
     p = 1
@@ -33,7 +66,7 @@ function snafu_to_int(s) result (o)
             
         
             o = o + n * p
-            print *, 's(i:i)=', ichar(s(i:i)), 'i=', i, 'n=', n, 'p=', p, 'o=', o, '\n'
+            !print *, 's(i:i)=', ichar(s(i:i)), 'i=', i, 'n=', n, 'p=', p, 'o=', o, '\n'
             p = p * 5
         endif
     
